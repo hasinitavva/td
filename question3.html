@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Image Slider</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #1a1a2e;
+      margin: 0;
+    }
+
+    h2 { margin-bottom: 16px; color: #eee; letter-spacing: 2px; }
+
+    .slider {
+      position: relative;
+      width: 600px;
+      height: 350px;
+      overflow: hidden;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .slide.active { display: block; }
+
+    .slide svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 18px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 17px;
+      color: white;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    button {
+      padding: 10px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #e94560;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #c73652; }
+
+    .dots { display: flex; gap: 8px; }
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #555;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .dot.active { background: #e94560; }
+  </style>
+</head>
+<body>
+
+<h2>🌄 Scenic Slider</h2>
+
+<div class="slider" id="slider">
+
+  <div class="slide active">
+    <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff6b35"/>
+          <stop offset="50%" stop-color="#f7c59f"/>
+          <stop offset="100%" stop-color="#ffda77"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="350" fill="url(#sky1)"/>
+      <circle cx="300" cy="160" r="45" fill="#ffe066" opacity="0.95"/>
+      <circle cx="300" cy="160" r="60" fill="#ffb347" opacity="0.25"/>
+      <polygon points="0,260 80,130 160,230 240,100 320,210 400,120 480,200 560,90 600,180 600,350 0,350" fill="#7b3f6e"/>
+      <polygon points="0,310 100,200 200,280 300,170 400,260 500,190 600,250 600,350 0,350" fill="#4a1942"/>
+      <rect x="0" y="320" width="600" height="30" fill="#2d0f2d"/>
+    </svg>
+    <div class="caption">🌅 Sunset Mountains</div>
+  </div>
+
+  <div class="slide">
+    <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a0a2e"/>
+          <stop offset="100%" stop-color="#1a3a5c"/>
+        </linearGradient>
+        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a3a5c"/>
+          <stop offset="100%" stop-color="#0a1a30"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="350" fill="url(#sky2)"/>
+      <circle cx="60" cy="40" r="1.5" fill="white" opacity="0.9"/>
+      <circle cx="150" cy="25" r="1" fill="white" opacity="0.7"/>
+      <circle cx="250" cy="55" r="2" fill="white" opacity="0.8"/>
+      <circle cx="380" cy="30" r="1.5" fill="white" opacity="0.9"/>
+      <circle cx="480" cy="60" r="1" fill="white" opacity="0.6"/>
+      <circle cx="540" cy="20" r="2" fill="white" opacity="0.8"/>
+      <circle cx="100" cy="80" r="1" fill="white" opacity="0.5"/>
+      <circle cx="440" cy="90" r="1.5" fill="white" opacity="0.7"/>
+      <circle cx="320" cy="15" r="1" fill="white" opacity="0.9"/>
+      <circle cx="480" cy="80" r="30" fill="#fff8dc"/>
+      <circle cx="493" cy="72" r="28" fill="#1a2a50"/>
+      <rect x="0" y="200" width="600" height="150" fill="url(#water)"/>
+      <ellipse cx="480" cy="200" rx="20" ry="5" fill="rgba(255,248,220,0.4)"/>
+      <rect x="472" y="205" width="16" height="80" fill="rgba(255,248,220,0.1)"/>
+      <path d="M0 220 Q75 210 150 220 Q225 230 300 220 Q375 210 450 220 Q525 230 600 220" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+      <path d="M0 250 Q75 240 150 250 Q225 260 300 250 Q375 240 450 250 Q525 260 600 250" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    </svg>
+    <div class="caption">🌙 Night Ocean</div>
+  </div>
+
+  <div class="slide">
+    <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+      <rect width="600" height="350" fill="#fff0f5"/>
+      <ellipse cx="300" cy="360" rx="340" ry="60" fill="#a8d5a2"/>
+      <rect x="0" y="310" width="600" height="40" fill="#a8d5a2"/>
+      <rect x="270" y="180" width="20" height="140" fill="#6b3a2a" rx="5"/>
+    </svg>
+    <div class="caption">🌸 Cherry Blossom</div>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button onclick="changeSlide(-1)">◀ Prev</button>
+  <div class="dots" id="dots"></div>
+  <button onclick="changeSlide(1)">Next ▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+  }
+
+  function changeSlide(dir) { goTo(current + dir); }
+
+  setInterval(() => changeSlide(1), 2500);
+</script>
+
+</body>
+</html>

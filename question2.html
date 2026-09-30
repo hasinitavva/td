@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Table Generator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 50px 20px;
+    }
+
+    .wrapper {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 36px;
+      width: 100%;
+      max-width: 850px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 26px;
+      color: #e0e0ff;
+      margin-bottom: 28px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(130, 100, 255, 0.6);
+    }
+
+    .controls {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .controls label {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      color: #a0a8d0;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .controls input {
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(130, 100, 255, 0.5);
+      border-radius: 8px;
+      font-size: 15px;
+      width: 110px;
+      text-align: center;
+      color: #ffffff;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .controls input:focus {
+      border-color: #8264ff;
+      background: rgba(130, 100, 255, 0.15);
+      box-shadow: 0 0 10px rgba(130, 100, 255, 0.3);
+    }
+
+    .controls button {
+      align-self: flex-end;
+      padding: 10px 28px;
+      background: linear-gradient(135deg, #8264ff, #5a3fcf);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(130, 100, 255, 0.4);
+    }
+
+    .controls button:hover {
+      background: linear-gradient(135deg, #9b7fff, #6e50e0);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(130, 100, 255, 0.6);
+    }
+
+    .controls button:active {
+      transform: translateY(0px);
+    }
+
+    #container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    thead th {
+      background: linear-gradient(135deg, #8264ff, #5a3fcf);
+      color: #ffffff;
+      padding: 12px 18px;
+      font-size: 13px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid rgba(130, 100, 255, 0.3);
+    }
+
+    thead th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    thead th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    tbody td {
+      padding: 11px 18px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      font-size: 14px;
+      color: #c8d0f0;
+      transition: background 0.2s;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    tbody tr:hover td {
+      background-color: rgba(130, 100, 255, 0.15);
+      color: #ffffff;
+    }
+
+    tbody td:first-child {
+      font-weight: bold;
+      color: #a98fff;
+      background-color: rgba(130, 100, 255, 0.1);
+      border-left: 3px solid #8264ff;
+    }
+
+    #container::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    #container::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+
+    #container::-webkit-scrollbar-thumb {
+      background: #8264ff;
+      border-radius: 10px;
+    }
+
+    tbody td:not(:first-child) {
+      position: relative;
+    }
+
+    tbody td:not(:first-child):hover::after {
+      content: '✔';
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      font-size: 10px;
+      color: #8264ff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h2>⚡ Dynamic Table Generator</h2>
+
+    <div class="controls">
+      <label>
+        Number of Rows
+        <input type="number" id="rows" value="4" min="1" max="20">
+      </label>
+      <label>
+        Number of Columns
+        <input type="number" id="cols" value="3" min="1" max="10">
+      </label>
+      <button onclick="generate()">⚙ Generate Table</button>
+    </div>
+
+    <div id="container"></div>
+  </div>
+
+  <script>
+    function generateTable(rows, cols) {
+      const table = document.createElement('table');
+
+      const thead = table.createTHead();
+      const headerRow = thead.insertRow();
+
+      const cornerTh = document.createElement('th');
+      cornerTh.textContent = '#';
+      headerRow.appendChild(cornerTh);
+
+      for (let c = 1; c <= cols; c++) {
+        const th = document.createElement('th');
+        th.textContent = `Col ${c}`;
+        headerRow.appendChild(th);
+      }
+
+      const tbody = table.createTBody();
+      for (let r = 1; r <= rows; r++) {
+        const row = tbody.insertRow();
+
+        const labelCell = row.insertCell();
+        labelCell.textContent = `Row ${r}`;
+
+        for (let c = 1; c <= cols; c++) {
+          const cell = row.insertCell();
+          cell.textContent = `R${r} C${c}`;
+        }
+      }
+
+      return table;
+    }
+
+    function generate() {
+      const rows = parseInt(document.getElementById('rows').value);
+      const cols = parseInt(document.getElementById('cols').value);
+
+      if (isNaN(rows) || isNaN(cols) || rows < 1 || cols < 1) {
+        alert('Please enter valid row and column numbers!');
+        return;
+      }
+
+      const container = document.getElementById('container');
+      container.innerHTML = '';
+      container.appendChild(generateTable(rows, cols));
+    }
+
+    window.onload = generate;
+  </script>
+
+</body>
+</html>

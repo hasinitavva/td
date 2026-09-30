@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VIMS Portal Login</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0d1b2a, #1b3a6b);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 36px 32px;
+      width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h2 {
+      color: #1b3a6b;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .header p {
+      color: #555;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid #1b3a6b;
+      margin: 12px 0 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus { border-color: #1b3a6b; }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .row > div { flex: 1; }
+
+    .grid-section {
+      background: #f0f4ff;
+      border: 1.5px solid #c0cfe8;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 20px;
+    }
+
+    .grid-section label {
+      color: #1b3a6b;
+      margin-bottom: 10px;
+    }
+
+    .grid-inputs {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .grid-tag {
+      background: #1b3a6b;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .grid-inputs input {
+      flex: 1;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: #1b3a6b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover { background: #0d2550; }
+
+    .links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      font-size: 12px;
+    }
+
+    .links a {
+      color: #1b3a6b;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .links a:hover { text-decoration: underline; }
+
+    #message {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .success { background: #d4edda; color: #155724; display: block !important; }
+    .error   { background: #f8d7da; color: #721c24; display: block !important; }
+
+    .footer-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
+      padding-top: 14px;
+      font-size: 12px;
+      color: #1b3a6b;
+      font-weight: 600;
+    }
+
+    .footer-links span { cursor: pointer; }
+    .footer-links span:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <h2>🎓 VIGNAN'S</h2>
+    <p>VIMS PORTAL</p>
+  </div>
+  <hr class="divider"/>
+
+  <div class="row">
+    <div>
+      <label>Emp Code</label>
+      <input type="text" id="empId" placeholder="e.g. VS 0237" />
+    </div>
+    <div>
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter Password" />
+    </div>
+  </div>
+
+  <div class="grid-section">
+    <label>🔒 Grid Values</label>
+    <div class="grid-inputs">
+      <div class="grid-tag" id="pos1">G5</div>
+      <input type="text" id="grid1" placeholder="Value 1" maxlength="6" />
+      <div class="grid-tag" id="pos2">G12</div>
+      <input type="text" id="grid2" placeholder="Value 2" maxlength="6" />
+    </div>
+  </div>
+
+  <button class="btn-login" onclick="login()">SIGN IN TO WORKSPACE →</button>
+
+  <div class="links">
+    <a onclick="forgotPassword()">Forgot Password?</a>
+    <a onclick="resetGrid()">Reset Grid Values</a>
+  </div>
+
+  <div id="message"></div>
+
+  <div class="footer-links">
+    <span>📄 DEO MANUAL</span>
+    <span>📄 FACULTY MANUAL</span>
+  </div>
+</div>
+
+<script>
+  const USERS = {
+    "VS0237": {
+      password: "pass123",
+      grid: {
+        G1:"A1", G2:"B2", G3:"C3", G4:"D4", G5:"E5",
+        G6:"F6", G7:"G7", G8:"H8", G9:"I9", G10:"J10",
+        G11:"K11", G12:"L12", G13:"M13", G14:"N14",
+        G15:"O15", G16:"P16", G17:"Q17", G18:"R18"
+      }
+    },
+    "VS0238": {
+      password: "mypass",
+      grid: {
+        G1:"AA", G2:"BB", G3:"CC", G4:"DD", G5:"EE",
+        G6:"FF", G7:"GG", G8:"HH", G9:"II", G10:"JJ",
+        G11:"KK", G12:"LL", G13:"MM", G14:"NN",
+        G15:"OO", G16:"PP", G17:"QQ", G18:"RR"
+      }
+    }
+  };
+
+  let currentPos1 = "", currentPos2 = "";
+
+  function generateGridPositions() {
+    const nums = Array.from({length: 18}, (_, i) => i + 1);
+    const i1 = Math.floor(Math.random() * 18);
+    let i2 = Math.floor(Math.random() * 17);
+    if (i2 >= i1) i2++;
+    currentPos1 = "G" + nums[i1];
+    currentPos2 = "G" + nums[i2];
+    document.getElementById("pos1").textContent = currentPos1;
+    document.getElementById("pos2").textContent = currentPos2;
+    document.getElementById("grid1").value = "";
+    document.getElementById("grid2").value = "";
+  }
+
+  function login() {
+    const empRaw  = document.getElementById("empId").value.trim().replace(/\s/g,"").toUpperCase();
+    const pass    = document.getElementById("password").value.trim();
+    const gVal1   = document.getElementById("grid1").value.trim();
+    const gVal2   = document.getElementById("grid2").value.trim();
+    const msgBox  = document.getElementById("message");
+
+    if (!empRaw || !pass || !gVal1 || !gVal2) {
+      showMsg("⚠️ Please fill in all fields.", "error");
+      return;
+    }
+
+    const user = USERS[empRaw];
+
+    if (!user) {
+      showMsg("❌ Employee ID not found.", "error");
+      return;
+    }
+
+    if (user.password !== pass) {
+      showMsg("❌ Incorrect password.", "error");
+      return;
+    }
+
+    const expected1 = user.grid[currentPos1];
+    const expected2 = user.grid[currentPos2];
+
+    if (gVal1 !== expected1 || gVal2 !== expected2) {
+      showMsg("❌ Incorrect grid values. Access Denied.", "error");
+      generateGridPositions();
+      return;
+    }
+
+    showMsg("✅ Access Granted! Welcome, " + empRaw, "success");
+  }
+
+  function showMsg(text, type) {
+    const box = document.getElementById("message");
+    box.textContent = text;
+    box.className = type;
+  }
+
+  function resetGrid() {
+    generateGridPositions();
+    showMsg("🔄 Grid positions refreshed.", "");
+    document.getElementById("message").style.display = "block";
+    document.getElementById("message").style.background = "#fff3cd";
+    document.getElementById("message").style.color = "#856404";
+  }
+
+  function forgotPassword() {
+    alert("Please contact your system administrator to reset your password.");
+  }
+
+  generateGridPositions();
+</script>
+
+</body>
+</html>

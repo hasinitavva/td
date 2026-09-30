@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Progress Bar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e8f4fd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+      width: 370px;
+      text-align: center;
+    }
+
+    h2 { margin: 0 0 6px; color: #222; }
+
+    #stepInfo {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 18px;
+    }
+
+    .bar-bg {
+      background: #e0e0e0;
+      border-radius: 20px;
+      height: 22px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    #bar {
+      height: 100%;
+      width: 0%;
+      background: #3b82f6;
+      border-radius: 20px;
+      transition: width 0.5s ease;
+      line-height: 22px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    #question {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 16px;
+      min-height: 44px;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .ans-btn {
+      padding: 11px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      background: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #333;
+    }
+
+    .ans-btn:hover { border-color: #3b82f6; background: #eff6ff; }
+    .ans-btn.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+    .ans-btn.wrong   { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+    #msg {
+      font-size: 14px;
+      color: #555;
+      min-height: 20px;
+      margin-bottom: 14px;
+    }
+
+    #nextBtn {
+      padding: 10px 28px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+    }
+    #nextBtn:hover { background: #2563eb; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🧠 Quiz Progress</h2>
+  <div id="stepInfo">Question 1 of 5</div>
+
+  <div class="bar-bg">
+    <div id="bar"></div>
+  </div>
+
+  <div id="question"></div>
+
+  <div class="answers" id="answers"></div>
+
+  <div id="msg"></div>
+  <button id="nextBtn" onclick="nextQuestion()">Next ➡</button>
+</div>
+
+<script>
+  const quiz = [
+    { q: "What is 5 + 3?", options: ["6","8","9","7"], ans: "8" },
+    { q: "What color is the sky?", options: ["Green","Red","Blue","Yellow"], ans: "Blue" },
+    { q: "How many days in a week?", options: ["5","6","8","7"], ans: "7" },
+    { q: "What is 10 × 2?", options: ["12","22","20","18"], ans: "20" },
+    { q: "Which planet is closest to the Sun?", options: ["Earth","Mars","Mercury","Venus"], ans: "Mercury" }
+  ];
+
+  let current = 0;
+  let score   = 0;
+
+  function loadQuestion() {
+    const q = quiz[current];
+    document.getElementById('question').textContent   = q.q;
+    document.getElementById('stepInfo').textContent   = `Question ${current + 1} of ${quiz.length}`;
+    document.getElementById('msg').textContent        = '';
+    document.getElementById('nextBtn').style.display  = 'none';
+
+    const answersDiv = document.getElementById('answers');
+    answersDiv.innerHTML = '';
+
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className   = 'ans-btn';
+      btn.textContent = opt;
+      btn.onclick     = () => checkAnswer(opt);
+      answersDiv.appendChild(btn);
+    });
+
+    const percent = Math.round((current / quiz.length) * 100);
+    const bar = document.getElementById('bar');
+    bar.style.width   = percent + '%';
+    bar.textContent   = percent > 0 ? percent + '%' : '';
+  }
+
+  function checkAnswer(selected) {
+    const correct = quiz[current].ans;
+    const btns    = document.querySelectorAll('.ans-btn');
+
+    btns.forEach(b => {
+      b.onclick = null;
+      b.style.cursor = 'default';
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+
+    if (selected === correct) {
+      score++;
+      document.getElementById('msg').textContent = '✅ Correct!';
+      btns.forEach(b => { if (b.textContent === selected) b.classList.add('correct'); });
+    } else {
+      document.getElementById('msg').textContent = `❌ Wrong! Answer: ${correct}`;
+      btns.forEach(b => { if (b.textContent === selected) b.classList.add('wrong'); });
+    }
+
+    document.getElementById('nextBtn').style.display = 'inline-block';
+  }
+
+  function nextQuestion() {
+    current++;
+    if (current < quiz.length) {
+      loadQuestion();
+    } else {
+      const bar = document.getElementById('bar');
+      bar.style.width  = '100%';
+      bar.textContent  = '100%';
+      bar.style.background = '#10b981';
+
+      document.getElementById('question').textContent  = `🎉 Quiz Done! You scored ${score} / ${quiz.length}`;
+      document.getElementById('answers').innerHTML     = '';
+      document.getElementById('msg').textContent       = score === quiz.length ? '🏆 Perfect score!' : score >= 3 ? '👍 Well done!' : '📚 Keep practicing!';
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('stepInfo').textContent  = 'Completed!';
+    }
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
